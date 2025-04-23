@@ -100,4 +100,4 @@ Este projeto está sob a licença MIT. Fique à vontade para usar, modificar e c
 
 ---
 
-Desenvolvido com 💻 por [Seu Nome]
+Desenvolvido com 💻 por Guilherme Charles
