@@ -4,14 +4,22 @@ from dotenv import load_dotenv
 from models import Book
 import os
 
+
+#Configuração de porta
 load_dotenv()
 port = int(os.getenv("API_RUN_PORT", "5000"))
 
+#Configuração de App
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///books.db"
 db.init_app(app)
 
 
+"""
+Rotas
+"""
+
+#Criar livro
 @app.route('/livros', methods = ["POST"])
 def create():
     try:
@@ -45,11 +53,11 @@ def create():
         }), 201
     
     except Exception as e:
-        # Em caso de erro, faz rollback e retorna mensagem de erro
+        # Em caso de erro, faz reversão e retorna mensagem de erro
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-
+#Listar livros
 @app.route('/livros', methods = ["GET"])
 def list():
     try:
@@ -69,7 +77,7 @@ def list():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
+#Buscar livro pelo ID
 @app.route('/livros/<int:id>', methods = ["GET"])
 def search(id):
     try:
@@ -79,7 +87,7 @@ def search(id):
         if not book:
             return jsonify({"error": "Book not found"}), 404
             
-        # Return single book as JSON
+        # Retorna o livro buscado em Json
         return jsonify({
             "id": book.id,
             "title": book.title,
@@ -90,6 +98,8 @@ def search(id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+#Deleta Livro pelo ID
 @app.route('/livros/<int:id>', methods = ["DELETE"])
 def delete(id):
     try:
@@ -100,7 +110,7 @@ def delete(id):
 
         db.session.delete(book)
         db.session.commit()    
-        # Return single book as JSON
+        # Retorna os detalhes do livro deletado
         return jsonify({
             "id": book.id,
             "title": book.title,
